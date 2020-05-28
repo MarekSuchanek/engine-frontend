@@ -23,6 +23,7 @@ parsers appState wrapRoute =
     , map (wrapRoute << CreateMigrationRoute) (s moduleRoot </> s (lr "questionnaires.createMigration" appState) </> string)
     , map (wrapRoute << DetailRoute) (s moduleRoot </> s (lr "questionnaires.detail" appState) </> string)
     , map (wrapRoute << EditRoute) (s moduleRoot </> s (lr "questionnaires.edit" appState) </> string)
+    , map (wrapRoute <| ImportRoute) (s moduleRoot </> s (lr "questionnaires.import" appState))
     , map (wrapRoute <| IndexRoute) (s moduleRoot)
     , map (wrapRoute << MigrationRoute) (s moduleRoot </> s (lr "questionnaires.migration" appState) </> string)
     ]
@@ -51,6 +52,9 @@ toUrl appState route =
 
         EditRoute uuid ->
             [ moduleRoot, lr "questionnaires.edit" appState, uuid ]
+
+        ImportRoute ->
+            [ moduleRoot, lr "questionnaires.import" appState ]
 
         IndexRoute ->
             [ moduleRoot ]

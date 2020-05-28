@@ -6,6 +6,7 @@ import Wizard.Questionnaires.Create.View
 import Wizard.Questionnaires.CreateMigration.View
 import Wizard.Questionnaires.Detail.View
 import Wizard.Questionnaires.Edit.View
+import Wizard.Questionnaires.Import.View
 import Wizard.Questionnaires.Index.View
 import Wizard.Questionnaires.Migration.View
 import Wizard.Questionnaires.Models exposing (Model)
@@ -31,6 +32,10 @@ view route appState model =
         EditRoute _ ->
             Html.map EditMsg <|
                 Wizard.Questionnaires.Edit.View.view appState model.editModel
+
+        ImportRoute ->
+            Html.map ImportMsg <|
+                Wizard.Questionnaires.Import.View.view appState model.importModel
 
         IndexRoute ->
             Html.map IndexMsg <|

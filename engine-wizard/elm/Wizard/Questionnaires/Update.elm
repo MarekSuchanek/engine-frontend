@@ -6,6 +6,7 @@ import Wizard.Questionnaires.Create.Update
 import Wizard.Questionnaires.CreateMigration.Update
 import Wizard.Questionnaires.Detail.Update
 import Wizard.Questionnaires.Edit.Update
+import Wizard.Questionnaires.Import.Update
 import Wizard.Questionnaires.Index.Update
 import Wizard.Questionnaires.Migration.Update
 import Wizard.Questionnaires.Models exposing (Model)
@@ -31,6 +32,10 @@ fetchData route appState model =
         EditRoute uuid ->
             Cmd.map EditMsg <|
                 Wizard.Questionnaires.Edit.Update.fetchData appState uuid
+
+        ImportRoute ->
+            Cmd.map ImportMsg <|
+                Wizard.Questionnaires.Import.Update.fetchData appState model.importModel
 
         IndexRoute ->
             Cmd.map IndexMsg <|
@@ -81,6 +86,13 @@ update wrapMsg msg appState model =
                     Wizard.Questionnaires.Edit.Update.update (wrapMsg << EditMsg) eMsg appState model.editModel
             in
             ( { model | editModel = editModel }, cmd )
+
+        ImportMsg iMsg ->
+            let
+                ( importModel, cmd ) =
+                    Wizard.Questionnaires.Import.Update.update (wrapMsg << ImportMsg) iMsg appState model.importModel
+            in
+            ( { model | importModel = importModel }, cmd )
 
         IndexMsg iMsg ->
             let

@@ -59,10 +59,23 @@ viewQuestionnaires appState model questionnaires =
 
 indexActions : AppState -> List (Html Msg)
 indexActions appState =
-    [ linkTo appState
-        (Routes.QuestionnairesRoute <| CreateRoute Nothing)
-        [ class "btn btn-primary" ]
-        [ lx_ "header.create" appState ]
+    let
+        importButton =
+            linkTo appState
+                (Routes.QuestionnairesRoute <| ImportRoute)
+                [ class "btn btn-outline-primary link-with-icon" ]
+                [ faSet "kms.upload" appState
+                , lx_ "header.import" appState
+                ]
+
+        createButton =
+            linkTo appState
+                (Routes.QuestionnairesRoute <| CreateRoute Nothing)
+                [ class "btn btn-primary" ]
+                [ lx_ "header.create" appState ]
+    in
+    [ importButton
+    , createButton
     ]
 
 
