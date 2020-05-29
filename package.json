@@ -11,7 +11,7 @@
     "clean": "rm -rf dist",
     "start": "npm run start:wizard",
     "start:registry": "COMPONENT=registry webpack-dev-server --port 8081",
-    "start:wizard": "COMPONENT=wizard webpack-dev-server --port 8080",
+    "start:wizard": "webpack-dev-server --port 8080",
     "start:wizard-research": "COMPONENT=wizard-research webpack-dev-server --port 8082",
     "test": "npm run test:elm && npm run test:registry:icon-set && npm run test:registry:locale && npm run test:wizard:icon-set && npm run test:wizard:locale && npm run test:wizard-research:icon-set && npm run test:wizard-research:locale",
     "test:elm": "elm-test",

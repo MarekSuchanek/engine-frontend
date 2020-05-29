@@ -3,6 +3,7 @@ module Wizard.Settings.Common.EditableConfig exposing (EditableConfig, decoder, 
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline as D
 import Json.Encode as E
+import Json.Encode.Extra as E
 import Wizard.Common.Config.DashboardConfig as DashboardConfig exposing (DashboardConfig)
 import Wizard.Common.Config.LookAndFeelConfig as LookAndFeelConfig exposing (LookAndFeelConfig)
 import Wizard.Common.Config.OrganizationConfig as OrganizationConfig exposing (OrganizationConfig)
@@ -93,4 +94,5 @@ encode config =
         , ( "knowledgeModelRegistry", EditableKnowledgeModelRegistryConfig.encode config.knowledgeModelRegistry )
         , ( "questionnaire", EditableQuestionnairesConfig.encode config.questionnaires )
         , ( "submission", EditableSubmissionConfig.encode config.submission )
+        , ( "template", E.object [ ( "recommendedTemplateUuid", E.maybe E.string Nothing ) ] )
         ]
