@@ -1,13 +1,13 @@
 module Wizard.Questionnaires.Import.View exposing (view)
 
-import Form exposing (Form)
 import ActionResult exposing (ActionResult(..))
+import Form exposing (Form)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Decode
 import Shared.Html exposing (emptyNode, faSet)
-import Shared.Locale exposing (l, lx, lg)
+import Shared.Locale exposing (l, lg, lx)
 import Wizard.Common.AppState exposing (AppState)
 import Wizard.Common.Html.Attribute exposing (detailClass)
 import Wizard.Common.View.ActionButton as ActionResult
@@ -35,12 +35,13 @@ lx_ =
 view : AppState -> Model -> Html Msg
 view appState model =
     let
-        content = case model.madmp of
-            Just madmp ->
-                createContentView appState model madmp
+        content =
+            case model.madmp of
+                Just madmp ->
+                    createContentView appState model madmp
 
-            _ ->
-                fileInputView appState model
+                _ ->
+                    fileInputView appState model
     in
     div [ detailClass "Questionnaires__Import" ]
         [ Page.header (l_ "header.title" appState) []
@@ -51,10 +52,15 @@ view appState model =
 fileInputView : AppState -> Model -> Html Msg
 fileInputView appState model =
     let
-        content = dropzoneView appState model
+        content =
+            dropzoneView appState model
     in
     div []
-        [ p [] [text "Select you maDMP JSON file to import according questionnaire."]
+        [ p []
+            [ text "Select and parse your maDMP JSON file to import according questionnaire. This prototype has been done during the "
+            , a [ href "https://rda-dmp-common.github.io/hackathon-2020/" ] [ text "RDA Hackathon on maDMPs 2020" ]
+            , text " 🎉"
+            ]
         , hr [] []
         , content
         ]
@@ -64,19 +70,19 @@ createContentView : AppState -> Model -> MaDMP -> Html Msg
 createContentView appState model madmp =
     div []
         [ FormResult.view appState model.savingQuestionnaire
-        , formView appState model madmp |> Html.map FormMsg
+        , formView appState model |> Html.map FormMsg
         , FormActions.view appState
             (Routes.QuestionnairesRoute ImportRoute)
             (ActionResult.ButtonConfig (l_ "header.save" appState) model.savingQuestionnaire (FormMsg Form.Submit) False)
-        , madmpContentView appState model
+        , madmpContentView madmp
         ]
 
 
-
-formView : AppState -> Model -> MaDMP -> Html Form.Msg
-formView appState model madmp =
+formView : AppState -> Model -> Html Form.Msg
+formView appState model =
     let
-        parentInput = FormGroup.codeView supportedPackageId
+        parentInput =
+            FormGroup.codeView supportedPackageId
 
         accessibilitySelect =
             if appState.config.questionnaires.questionnaireAccessibility.enabled then
@@ -95,38 +101,37 @@ formView appState model madmp =
     formHtml
 
 
-madmpContentView : AppState -> Model -> Html Msg
-madmpContentView appState model =
-    case model.madmp of
-        Just madmp ->
-            div [ ]
-                [ h3 [] [ text "maDMP import preview" ]
-                    , table [ class "table table-striped" ]
-                    [ tr []
-                        [ th [] [ text "Title" ]
-                        , td [] [ text madmp.dmp.title ]
-                        ]
-                    , tr []
-                        [ th [] [ text "Description" ]
-                        , td [] [ text madmp.dmp.description ]
-                        ]
-                    , tr []
-                        [ th [] [ text "Language" ]
-                        , td [] [ text madmp.dmp.language ]
-                        ]
-                    , tr []
-                        [ th [] [ text "Contributors" ]
-                        , td [] [ ul [] (List.map (\c -> li [] [ text c.name ]) madmp.dmp.contributors) ]
-                        ]
-                    , tr []
-                        [ th [] [ text "Projects" ]
-                        , td [] [ ul [] (List.map (\p -> li [] [ text p.title ]) madmp.dmp.projects) ]
-                        ]
-                    ]
+madmpContentView : MaDMP -> Html Msg
+madmpContentView madmp =
+    div [ detailClass "Questionnaires__MaDMP__Detail" ]
+        [ h3 [] [ text "maDMP import preview" ]
+        , table [ class "table table-striped" ]
+            [ tr []
+                [ th [] [ text "Title" ]
+                , td [] [ text madmp.dmp.title ]
                 ]
-
-        Nothing ->
-            div [] []
+            , tr []
+                [ th [] [ text "Description" ]
+                , td [] [ text madmp.dmp.description ]
+                ]
+            , tr []
+                [ th [] [ text "Language" ]
+                , td [] [ text madmp.dmp.language ]
+                ]
+            , tr []
+                [ th [] [ text "Contributors" ]
+                , td [] [ ul [] (List.map (\c -> li [] [ text c.name ]) madmp.dmp.contributors) ]
+                ]
+            , tr []
+                [ th [] [ text "Projects" ]
+                , td [] [ ul [] (List.map (\p -> li [] [ text p.title ]) madmp.dmp.projects) ]
+                ]
+            , tr []
+                [ th [] [ text "Datasets" ]
+                , td [] [ ul [] (List.map (\d -> li [] [ text d.title ]) madmp.dmp.datasets) ]
+                ]
+            ]
+        ]
 
 
 dropzoneView : AppState -> Model -> Html Msg
@@ -145,7 +150,11 @@ dropzoneView appState model =
         , content
         ]
 
+
+
 {- copy-paste from KM import -}
+
+
 fileView : AppState -> Model -> String -> Html Msg
 fileView appState model fileName =
     let
@@ -209,4 +218,3 @@ onDragEvent event msg =
             , preventDefault = True
             , message = msg
             }
-
