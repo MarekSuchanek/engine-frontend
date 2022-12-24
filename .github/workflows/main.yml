@@ -2,17 +2,16 @@ name: Engine Frontend CI
 
 on:
   push:
-  pull_request:
 
 jobs:
-  btp:
-    name: Build-Tag-Push
+  docker:
+    name: Docker
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         component: [registry, wizard]
-        node-version: [18.1.0]
+        node-version: [18]
     
     env:
       COMPONENT: ${{ matrix.component }}
